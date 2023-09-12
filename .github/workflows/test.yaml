@@ -31,9 +31,9 @@ jobs:
 
     - name: Create new folders and files
       run: |
-        mkdir -p metadata/folder1 && echo "execution_order=010" > metadata/folder1/metadata.yaml
-        mkdir -p metadata/folder2 && echo "ececution_order=020" > metadata/folder2/metadata.yaml
-        mkdir -p metadata/folder3 && echo "execution_order=030" > metadata/folder3/metadata.yaml        
+        mkdir -p metadata/folder1 && echo "execution_order: 010" > metadata/folder1/metadata.yaml
+        mkdir -p metadata/folder2 && echo "ececution_order: 020" > metadata/folder2/metadata.yaml
+        mkdir -p metadata/folder3 && echo "execution_order: 030" > metadata/folder3/metadata.yaml        
         mkdir -p nometa/folder1 && echo "test" > nometa/folder1/test.txt
         mkdir -p nometa/folder2 && echo "test" > nometa/folder2/test.txt
         mkdir -p nometa/folder3 && echo "test" > nometa/folder3/test.txt
