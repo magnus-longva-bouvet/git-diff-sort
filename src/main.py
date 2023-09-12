@@ -95,5 +95,6 @@ json_output = json.dumps({
 # Set output as JSON
 set_output("json_output", json_output)
 
-
+# debug line
+set_output("magnus_debug", "debugvaloneline")
 
