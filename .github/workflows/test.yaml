@@ -26,6 +26,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
 
     - name: Create new folders and files
       run: |
@@ -42,7 +44,7 @@ jobs:
       with:
         meta_file_name: 'metadata.yaml'
         keywords: 'execution_order'
-        comparing_branch: 'origin/refs/main'
+        comparing_branch: 'main'
 
     - name: Echo Outputs
       run: |
