@@ -14,6 +14,7 @@ def run_git_command(command: str) -> list:
 
 def set_output(name: str, value: any) -> None:
     logging.info(f"Setting output {name}")
+    logging.info(f"Setting value {value}") # magnus debug line
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         delimiter = uuid.uuid1()
         print(f'{name}<<{delimiter}', file=fh)
