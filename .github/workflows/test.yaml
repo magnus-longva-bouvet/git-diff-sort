@@ -44,7 +44,7 @@ jobs:
       with:
         meta_file_name: 'metadata.yaml'
         keywords: 'execution_order'
-        comparing_branch: test'
+        comparing_branch: 'test'
 
     - name: Echo Outputs
       run: |
