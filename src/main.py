@@ -27,6 +27,7 @@ def read_yaml(folder: str, file_name: str, keyword: str) -> dict:
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
+        print(f"read_yaml function. data {data}") # magnus debug line
         return data.get(keyword, {})
     except FileNotFoundError:
         logging.error(f"File {file_path} not found")
