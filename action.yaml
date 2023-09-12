@@ -8,7 +8,7 @@ inputs:
     description: 'Keyword to look for in the YAML file'
     required: false
   comparing_branch:
-    description: 'Branch to compare with'
+    description: 'Branch to compare with #debug'
     required: false
     default: ''
 runs:
