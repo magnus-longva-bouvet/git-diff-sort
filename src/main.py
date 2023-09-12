@@ -63,7 +63,7 @@ git_diff_output = run_git_command(f"git diff {comparing_branch} --name-only")
 print(f"git_diff_output: {git_diff_output}")
 
 # Extract distinct folders and files
-distinct_folders = list(set([str(path).split('/')[0] for path in git_diff_output]))
+distinct_folders = list(set([str(path).lsplit('/')[0] for path in git_diff_output]))
 distinct_files = list(set(git_diff_output))
 
 # Populate metadata dictionary by reading YAML files in each folder
