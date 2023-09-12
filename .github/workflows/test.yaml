@@ -44,7 +44,7 @@ jobs:
       uses: ./ # Or use the repository URL if testing from another repository
       with:
         meta_file_name: 'metadata.yaml'
-        keywords: 'execution_order'
+        keyword: 'execution_order'
         comparing_branch: 'test'
 
     - name: Echo Outputs
