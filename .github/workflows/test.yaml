@@ -26,8 +26,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
     - name: Create new folders and files
       run: |
@@ -56,9 +54,6 @@ jobs:
         echo "Folders sorted by metadata (incremental): ${{ steps.test.outputs.folders_sorted_meta_inc }}"
         echo "Folders sorted by metadata (decremental): ${{ steps.test.outputs.folders_sorted_meta_dec }}"
         echo "Folders in json_output: ${{ steps.test.outputs.json_output }}"
-
-        # debug line
-        echo "debug line: ${{ steps.test.outputs.magnus_debug }}"
 
 
 

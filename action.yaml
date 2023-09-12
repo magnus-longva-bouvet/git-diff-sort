@@ -8,7 +8,7 @@ inputs:
     description: 'Keyword to look for in the YAML file'
     required: false
   comparing_branch:
-    description: 'Branch to compare with #debug'
+    description: 'Branch to compare with'
     required: false
     default: ''
 runs:
@@ -42,6 +42,3 @@ outputs:
   json_output:
     value: ${{ steps.git-diff.outputs.json_output }}
     description: 'All the different outputs in JSON format, you can access json_output.distinct_folders[]'
-  magnus_debug:
-    value: ${{ steps.git-diff.outputs.magnus_debug }}
-    description: 'magnus debug'

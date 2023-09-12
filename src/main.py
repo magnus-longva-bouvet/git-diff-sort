@@ -14,7 +14,6 @@ def run_git_command(command: str) -> list:
 
 def set_output(name: str, value: any) -> None:
     logging.info(f"Setting output {name}")
-    logging.info(f"Setting value {value}") # magnus debug line
     with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
         delimiter = uuid.uuid1()
         print(f'{name}<<{delimiter}', file=fh)
@@ -22,12 +21,10 @@ def set_output(name: str, value: any) -> None:
         print(delimiter, file=fh)
 
 def read_yaml(folder: str, file_name: str) -> dict:
-    print(f"read_yaml function. folder {folder} file_name {file_name}") # magnus debug line
     file_path = f"{folder}/{file_name}"
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
-        print(f"read_yaml function. data {data}") # magnus debug line
         return data
     except FileNotFoundError:
         logging.error(f"File {file_path} not found")
@@ -62,7 +59,6 @@ metadata = {}
 
 # Get Git Diff
 git_diff_output = run_git_command(f"git diff {comparing_branch} --name-only")
-print(f"git_diff_output: {git_diff_output}")
 
 # Extract distinct folders and files
 distinct_folders = list(set([str(path).rsplit('/', maxsplit=1)[0] for path in git_diff_output]))
@@ -106,7 +102,4 @@ json_output = json.dumps({
 
 # Set output as JSON
 set_output("json_output", json_output)
-
-# debug line
-set_output("magnus_debug", "debugvaloneline")
 
