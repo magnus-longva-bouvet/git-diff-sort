@@ -12,7 +12,7 @@ def run_git_command(command: str) -> list:
 
 def set_output(name: str, value: any) -> None:
     logging.info(f"Setting output {name}")
-    print(f"::set-output name={name}::{json.dumps(value)}")
+    print(f"{name}={json.dumps(value)} >> $GITHUB_ENV")
 
 def read_yaml(folder: str, file_name: str, keyword: str) -> dict:
     file_path = f"{folder}/{file_name}"
