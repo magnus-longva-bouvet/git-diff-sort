@@ -52,6 +52,8 @@ comparing_branch = args.comparing_branch
 metadata = {}
 
 # Get Git Diff
+git_branches = run_git_command(f"git branch")
+print(git_branches)
 git_diff_output = run_git_command(f"git diff {comparing_branch} --name-only")
 
 # Extract distinct folders and files
