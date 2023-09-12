@@ -37,6 +37,7 @@ jobs:
         mkdir -p nometa/folder1 && echo "test" > nometa/folder1/test.txt
         mkdir -p nometa/folder2 && echo "test" > nometa/folder2/test.txt
         mkdir -p nometa/folder3 && echo "test" > nometa/folder3/test.txt
+        git add *
 
     - name: Test and Confirm GitHub Action
       id: test
@@ -48,10 +49,6 @@ jobs:
 
     - name: Echo Outputs
       run: |
-        git diff
-        git diff --name-only
-        git branch --all
-        git status
         echo "Distinct folders: ${{ steps.test.outputs.distinct_folders }}"
         echo "Folders without metadata: ${{ steps.test.outputs.folders_without_metadata }}"
         echo "Folders sorted alphabetically (incremental): ${{ steps.test.outputs.folders_sorted_alpha_inc }}"
