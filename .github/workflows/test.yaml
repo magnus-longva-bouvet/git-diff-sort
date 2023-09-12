@@ -48,6 +48,10 @@ jobs:
 
     - name: Echo Outputs
       run: |
+        git diff
+        git diff --name-only
+        git branch --all
+        git status
         echo "Distinct folders: ${{ steps.test.outputs.distinct_folders }}"
         echo "Folders without metadata: ${{ steps.test.outputs.folders_without_metadata }}"
         echo "Folders sorted alphabetically (incremental): ${{ steps.test.outputs.folders_sorted_alpha_inc }}"
