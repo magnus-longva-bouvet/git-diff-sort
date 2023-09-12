@@ -22,6 +22,7 @@ def set_output(name: str, value: any) -> None:
         print(delimiter, file=fh)
 
 def read_yaml(folder: str, file_name: str, keyword: str) -> dict:
+    print(f"read_yaml function. folder {folder} file_name {file_name} keyword {keyword}") # magnus debug line
     file_path = f"{folder}/{file_name}"
     try:
         with open(file_path, 'r') as f:
