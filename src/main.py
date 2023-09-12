@@ -21,14 +21,14 @@ def set_output(name: str, value: any) -> None:
         print(value, file=fh)
         print(delimiter, file=fh)
 
-def read_yaml(folder: str, file_name: str, keyword: str) -> dict:
-    print(f"read_yaml function. folder {folder} file_name {file_name} keyword {keyword}") # magnus debug line
+def read_yaml(folder: str, file_name: str) -> dict:
+    print(f"read_yaml function. folder {folder} file_name {file_name}") # magnus debug line
     file_path = f"{folder}/{file_name}"
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
         print(f"read_yaml function. data {data}") # magnus debug line
-        return data.get(keyword, {})
+        return data
     except FileNotFoundError:
         logging.error(f"File {file_path} not found")
         return {}
@@ -70,11 +70,13 @@ distinct_files = list(set(git_diff_output))
 
 # Populate metadata dictionary by reading YAML files in each folder
 for folder in distinct_folders:
-    metadata.update(read_yaml(folder, yaml_meta_file_name, keyword))
+    sorting_key = read_yaml(folder, yaml_meta_file_name).get(keyword)
+    if sorting_key:
+        metadata[folder] = sorting_key
 
 # Filter folders based on metadata availability
-folders_with_metadata = [folder for folder in distinct_folders if folder in metadata]
-folders_without_metadata = [folder for folder in distinct_folders if folder not in metadata]
+folders_with_metadata = [folder for folder in distinct_folders if folder in metadata.keys()]
+folders_without_metadata = [folder for folder in distinct_folders if folder not in metadata.keys()]
 
 # Sort folders alphabetically
 folders_sorted_alpha_inc = sorted(distinct_folders)
