@@ -17,7 +17,7 @@ runs:
     - run: pip install -r requirements.txt
       shell: bash
     - run: python ./src/main.py --meta_file_name=${{ inputs.meta_file_name }} --keyword=${{ inputs.keyword }} --comparing_branch=${{ inputs.comparing_branch }}
-      id: ${{ steps.git-diff
+      id: steps.git-diff
       shell: bash
 
 outputs:
