@@ -50,7 +50,7 @@ jobs:
       with:
         meta_file_name: 'metadata.yaml'
         keywords: 'execution_order'
-        comparing_branch: 'main'
+        comparing_branch: 'origin/refs/main'
 
     - name: Echo Outputs
       run: |
