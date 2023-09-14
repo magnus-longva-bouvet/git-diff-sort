@@ -17,19 +17,28 @@ runs:
     - run: pip install -r requirements.txt
       shell: bash
     - run: python ./src/main.py --meta_file_name=${{ inputs.meta_file_name }} --keyword=${{ inputs.keyword }} --comparing_branch=${{ inputs.comparing_branch }}
+      id: git-diff
       shell: bash
+
 outputs:
   distinct_folders:
+    value: ${{ steps.git-diff.outputs.distinct_folders }}
     description: 'Distinct folders from Git diff'
   folders_without_metadata:
+    value: ${{ steps.git-diff.outputs.folders_without_metadata }}
     description: 'Folders without any metadata file'
   folders_sorted_alpha_inc:
+    value: ${{ steps.git-diff.outputs.folders_sorted_alpha_inc }}
     description: 'Folders sorted alphabetically (incremental)'
   folders_sorted_alpha_dec:
+    value: ${{ steps.git-diff.outputs.folders_sorted_alpha_dec }}
     description: 'Folders sorted alphabetically (decremental)'
   folders_sorted_meta_inc:
+    value: ${{ steps.git-diff.outputs.folders_sorted_meta_inc }}
     description: 'Folders sorted based on metadata (incremental)'
   folders_sorted_meta_dec:
+    value: ${{ steps.git-diff.outputs.folders_sorted_meta_dec }}
     description: 'Folders sorted based on metadata (decremental)'
   json_output:
+    value: ${{ steps.git-diff.outputs.json_output }}
     description: 'All the different outputs in JSON format, you can access json_output.distinct_folders[]'
