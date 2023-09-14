@@ -36,14 +36,6 @@ jobs:
         mkdir -p nometa/folder2 && echo "test" > nometa/folder2/test.txt
         mkdir -p nometa/folder3 && echo "test" > nometa/folder3/test.txt
 
-    - name: Create new branc with changes
-      run: | 
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        git checkout -b test
-        git add .
-        git commit -m "test"
-
     - name: Test and Confirm GitHub Action
       id: test
       uses: ./ # Or use the repository URL if testing from another repository
@@ -62,6 +54,6 @@ jobs:
         echo "Folders sorted by metadata (decremental): ${{ steps.test.outputs.folders_sorted_meta_dec }}"
         echo "Folders in json_output: ${{ steps.test.outputs.json_output }}"
 
-        
+
 
     
