@@ -1,0 +1,65 @@
+name: Test and Confirm GitHub Action
+
+on:
+  push:
+    branches: [ test ]
+  pull_request:
+    branches: [ test ]
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Create new folders and files
+      run: |
+        mkdir -p metadata/folder1 && echo "execution_order=010" > metadata/folder1/metadatay.yaml
+        mkdir -p metadata/folder2 && echo "ececution_order=020" > metadata/folder2/metadatay.yaml
+        mkdir -p metadata/folder3 && echo "execution_order=030" > metadata/folder3/metadatay.yaml        
+        mkdir -p nometa/folder1 && echo "test" > nometa/folder1/test.txt
+        mkdir -p nometa/folder2 && echo "test" > nometa/folder2/test.txt
+        mkdir -p nometa/folder3 && echo "test" > nometa/folder3/test.txt
+
+    - name: Create new branc with changes
+      run: | 
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git checkout -b test
+        git add .
+        git commit -m "test"
+
+    - name: Test and Confirm GitHub Action
+      id: test
+      uses: ./ # Or use the repository URL if testing from another repository
+      with:
+        meta_file_name: 'metadata.yaml'
+        keywords: 'execution_order'
+        comparing_branch: 'main'
+
+    - name: Echo Outputs
+      run: |
+        echo "Distinct folders: ${{ steps.test.outputs.distinct_folders }}"
+        echo "Folders without metadata: ${{ steps.test.outputs.folders_without_metadata }}"
+        echo "Folders sorted alphabetically (incremental): ${{ steps.test.outputs.folders_sorted_alpha_inc }}"
+        echo "Folders sorted alphabetially (decremental): ${{ steps.test.outputs.folders_sorted_alpha_dec }}"
+        echo "Folders sorted by metadata (incremental): ${{ steps.test.outputs.folders_sorted_meta_inc }}"
+        echo "Folders sorted by metadata (decremental): ${{ steps.test.outputs.folders_sorted_meta_dec }}"
+        echo "Folders in json_output: ${{ steps.test.outputs.json_output }}"
+
+    
