@@ -46,6 +46,7 @@ jobs:
         comparing_branch: 'test'
 
     - name: Echo Outputs
+      id: echo-outputs
       run: |
         echo "Distinct folders: ${{ steps.test.outputs.distinct_folders }}"
         echo "Folders without metadata: ${{ steps.test.outputs.folders_without_metadata }}"
@@ -54,6 +55,58 @@ jobs:
         echo "Folders sorted by metadata (incremental): ${{ steps.test.outputs.folders_sorted_meta_inc }}"
         echo "Folders sorted by metadata (decremental): ${{ steps.test.outputs.folders_sorted_meta_dec }}"
         echo "Folders in json_output: ${{ steps.test.outputs.json_output }}"
+
+        any_empty=$(if [[ -z "${{ steps.test.outputs.distinct_folders }}" ]] ||
+        [[ -z "${{ steps.test.outputs.folders_without_metadata }}" ]] ||
+        [[ -z "${{ steps.test.outputs.folders_sorted_alpha_inc }}" ]] ||
+        [[ -z "${{ steps.test.outputs.folders_sorted_alpha_dec }}" ]] ||
+        [[ -z "${{ steps.test.outputs.folders_sorted_meta_inc }}" ]] ||
+        [[ -z "${{ steps.test.outputs.folders_sorted_meta_dec }}" ]] ||
+        [[ -z "${{ steps.test.outputs.json_output }}" ]]; then echo "true"; else echo "false"; fi)
+
+        echo "any_empty=$any_empty" >> "$GITHUB_OUTPUT"
+
+    - name: Create PR to main
+      if: ${{ steps.echo-outputs.outputs.any_empty }} == 'false'
+      run: |
+        export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        git config user.name "GitHub Action"
+        git config user.email "action@github.com"
+        
+        existing_pr=$(gh pr list --base main -H "$branch_name" -s "open" --json number -q '.[0].number')
+
+        if [ -z "$existing_pr" ]; then
+          # Create a new pull request
+          pr_url=$(gh pr create --base main --head "$branch_name" --title "Review Plan Output" --body "$pr_body" --draft)
+          if [ -z "$pr_url" ]; then
+            cat error.log
+            exit 1
+          fi
+          pr_id=${pr_url##*/}
+        else
+          # Update the existing pull request
+          gh pr comment "$existing_pr" --body "$pr_body"
+          pr_id="$existing_pr"
+        fi
+        if [ -z "$pr_id" ]; then
+          cat error.log
+          exit 1
+        fi
+        echo "PR ID: $pr_id"
+        echo "pr_id=$pr_id" >> $GITHUB_ENV
+
+    - name: Comment json_output on PR
+      run: |
+        export GH_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        branch_name=$(git rev-parse --abbrev-ref HEAD)
+        pr_body=$(cat "$GITHUB_OUTPUT")
+        existing_pr=$(gh pr list --base main -H "$branch_name" -s "open" --json number -q '.[0].number')
+        if [ -z "$existing_pr" ]; then
+          cat error.log
+          exit 1
+        fi
+        gh pr comment "$existing_pr" --body "json_output : ${{ steps.test.outputs.json_output }}"
 
 
 
