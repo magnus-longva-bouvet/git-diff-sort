@@ -38,8 +38,9 @@
 - name: Run Git Diff Pro
   uses: blinqas/git-diff-sort@v1
   with:
-    yaml_meta_file_name: 'metadata.yaml'
+    meta_file_name: 'metadata.yaml'
     keyword: 'execution_order'
+    comparing_branch: 'main'
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
