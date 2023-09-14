@@ -1,7 +1,7 @@
-# Git Diff Pro
+# Git Diff Sort
 
 ## Overview
-`Git Diff Pro` is a GitHub Action designed to provide various Git diff outputs, enhancing CI/CD pipelines and aiding in code reviews. It's very useful for Terraform plan and apply workflows where you have different terraform processing in different folders and you need to process them in a specific order. The option to have a yaml meta data file to define the order of the folders is very useful in this case.
+`Git Diff Sort` is a GitHub Action designed to provide various Git diff outputs, enhancing CI/CD pipelines and aiding in code reviews. It's very useful for Terraform plan and apply workflows where you have different terraform processing in different folders and you need to process them in a specific order. The option to have a yaml meta data file to define the order of the folders is very useful in this case.
 
 ## Features
 - **Distinct Folders and Files**: Outputs distinct folders and files affected by a Git diff.
