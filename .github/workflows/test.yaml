@@ -29,28 +29,21 @@ jobs:
 
     - name: Create new folders and files
       run: |
-        mkdir -p metadata/folder1 && echo "execution_order=010" > metadata/folder1/metadatay.yaml
-        mkdir -p metadata/folder2 && echo "ececution_order=020" > metadata/folder2/metadatay.yaml
-        mkdir -p metadata/folder3 && echo "execution_order=030" > metadata/folder3/metadatay.yaml        
+        mkdir -p metadata/folder1 && echo "execution_order: 010" > metadata/folder1/metadata.yaml
+        mkdir -p metadata/folder2 && echo "execution_order: 020" > metadata/folder2/metadata.yaml
+        mkdir -p metadata/folder3 && echo "execution_order: 030" > metadata/folder3/metadata.yaml        
         mkdir -p nometa/folder1 && echo "test" > nometa/folder1/test.txt
         mkdir -p nometa/folder2 && echo "test" > nometa/folder2/test.txt
         mkdir -p nometa/folder3 && echo "test" > nometa/folder3/test.txt
-
-    - name: Create new branc with changes
-      run: | 
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        git checkout -b test
-        git add .
-        git commit -m "test"
+        git add *
 
     - name: Test and Confirm GitHub Action
       id: test
       uses: ./ # Or use the repository URL if testing from another repository
       with:
         meta_file_name: 'metadata.yaml'
-        keywords: 'execution_order'
-        comparing_branch: 'main'
+        keyword: 'execution_order'
+        comparing_branch: 'test'
 
     - name: Echo Outputs
       run: |
@@ -61,5 +54,7 @@ jobs:
         echo "Folders sorted by metadata (incremental): ${{ steps.test.outputs.folders_sorted_meta_inc }}"
         echo "Folders sorted by metadata (decremental): ${{ steps.test.outputs.folders_sorted_meta_dec }}"
         echo "Folders in json_output: ${{ steps.test.outputs.json_output }}"
+
+
 
     

@@ -3,6 +3,8 @@ import argparse
 import json
 import yaml
 import logging
+import uuid
+import os
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,14 +14,18 @@ def run_git_command(command: str) -> list:
 
 def set_output(name: str, value: any) -> None:
     logging.info(f"Setting output {name}")
-    print(f"::set-output name={name}::{json.dumps(value)}")
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+        delimiter = uuid.uuid1()
+        print(f'{name}<<{delimiter}', file=fh)
+        print(value, file=fh)
+        print(delimiter, file=fh)
 
-def read_yaml(folder: str, file_name: str, keyword: str) -> dict:
+def read_yaml(folder: str, file_name: str) -> dict:
     file_path = f"{folder}/{file_name}"
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
-        return data.get(keyword, {})
+        return data
     except FileNotFoundError:
         logging.error(f"File {file_path} not found")
         return {}
@@ -55,16 +61,18 @@ metadata = {}
 git_diff_output = run_git_command(f"git diff {comparing_branch} --name-only")
 
 # Extract distinct folders and files
-distinct_folders = list(set([str(path).split('/')[0] for path in git_diff_output]))
+distinct_folders = list(set([str(path).rsplit('/', maxsplit=1)[0] for path in git_diff_output]))
 distinct_files = list(set(git_diff_output))
 
 # Populate metadata dictionary by reading YAML files in each folder
 for folder in distinct_folders:
-    metadata.update(read_yaml(folder, yaml_meta_file_name, keyword))
+    sorting_key = read_yaml(folder, yaml_meta_file_name).get(keyword)
+    if sorting_key:
+        metadata[folder] = sorting_key
 
 # Filter folders based on metadata availability
-folders_with_metadata = [folder for folder in distinct_folders if folder in metadata]
-folders_without_metadata = [folder for folder in distinct_folders if folder not in metadata]
+folders_with_metadata = [folder for folder in distinct_folders if folder in metadata.keys()]
+folders_without_metadata = [folder for folder in distinct_folders if folder not in metadata.keys()]
 
 # Sort folders alphabetically
 folders_sorted_alpha_inc = sorted(distinct_folders)
@@ -94,6 +102,4 @@ json_output = json.dumps({
 
 # Set output as JSON
 set_output("json_output", json_output)
-
-
 
