@@ -1,5 +1,6 @@
 name: 'Git Diff Sort'
 description: 'Provides various Git diff outputs'
+icon: bar-chart-2
 inputs:
   meta_file_name:
     description: 'Name of the YAML file containing metadata'
