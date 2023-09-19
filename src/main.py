@@ -45,22 +45,30 @@ parser.add_argument('--comparing_branch', type=str, help='Branch to compare with
 args = parser.parse_args()
 
 # Get Git Diff
-git_diff_output = run_git_command(f"git diff {args.comparing_branch} --name-only")
+try:
+    git_diff_output = run_git_command(f"git diff {args.comparing_branch} --name-only")
+except Exception as e:
+    logging.error(f"An error occurred while running the git command: {e}")
+    git_diff_output = []
 
 # Extract distinct folders
-distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output]))
+distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path]))
 
 # Populate metadata dictionary by reading YAML files in each folder
 folders_with_metadata = []
 folders_without_metadata = []
 
 for folder in distinct_folders:
-    sorting_key = read_yaml(folder, args.meta_file_name).get(args.keyword)
-    if sorting_key:
-        metadata[folder] = sorting_key
-        folders_with_metadata.append(folder)
-    else:
-        folders_without_metadata.append(folder)
+    try:
+        sorting_key = read_yaml(folder, args.meta_file_name).get(args.keyword)
+        if sorting_key:
+            metadata[folder] = sorting_key
+            folders_with_metadata.append(folder)
+        else:
+            folders_without_metadata.append(folder)
+    except Exception as e:
+        logging.error(f"An error occurred while reading YAML for folder {folder}: {e}")
+
 
 # Sort folders
 folders_sorted_alpha_inc = sorted(distinct_folders)
