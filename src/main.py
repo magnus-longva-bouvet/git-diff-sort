@@ -49,7 +49,7 @@ working_directory = os.environ['GITHUB_WORKSPACE']
 try:
     print(f"working directory {working_directory}")
     print(f"current working dir {os.getcwd()}")
-    git_diff_output = run_git_command(f"git -git-dir {working_directory}/.git --work-tree {working_directory} diff {args.comparing_branch} --name-only")
+    git_diff_output = run_git_command(f"git --git-dir {working_directory}/.git --work-tree {working_directory} diff {args.comparing_branch} --name-only")
     print(f"git diff output {git_diff_output}")
 except Exception as e:
     logging.error(f"An error occurred while running the git command: {e}")
