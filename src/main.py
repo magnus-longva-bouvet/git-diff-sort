@@ -20,8 +20,8 @@ def set_output(name: str, value: any) -> None:
         print(value, file=fh)
         print(delimiter, file=fh)
 
-def read_yaml(folder: str, file_name: str) -> dict:
-    file_path = os.path.join(folder, file_name)
+def read_yaml(working_directory: str, folder: str, file_name: str) -> dict:
+    file_path = os.path.join(working_directory, folder, file_name)
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
@@ -45,8 +45,8 @@ parser.add_argument('--comparing_branch', type=str, help='Branch to compare with
 args = parser.parse_args()
 
 # Get Git Diff
+working_directory = os.environ['GITHUB_WORKSPACE']
 try:
-    working_directory = os.environ['GITHUB_WORKSPACE']
     print(f"working directory {working_directory}")
     print(f"current working dir {os.getcwd()}")
     git_diff_output = run_git_command(f"git -git-dir {working_directory}/.git --work-tree {working_directory} diff {args.comparing_branch} --name-only")
@@ -56,7 +56,7 @@ except Exception as e:
     git_diff_output = []
 
 # Extract distinct folders
-distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path]))
+distinct_folders = list(set([os.path.dirname(f"{path}") for path in git_diff_output if path]))
 
 # Populate metadata dictionary by reading YAML files in each folder
 folders_with_metadata = []
@@ -64,7 +64,7 @@ folders_without_metadata = []
 
 for folder in distinct_folders:
     try:
-        sorting_key = read_yaml(folder, args.meta_file_name).get(args.keyword)
+        sorting_key = read_yaml(working_directory, folder, args.meta_file_name).get(args.keyword)
         if sorting_key:
             metadata[folder] = sorting_key
             folders_with_metadata.append(folder)
