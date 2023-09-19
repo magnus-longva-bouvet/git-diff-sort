@@ -14,14 +14,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+#    - name: Checkout code
+#      uses: actions/checkout@v3
     - run: |
-        sudo apt update && sudo apt install tree -y
-        tree -L 3 -a ${{ github.action_path }}
         pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
-    - run: python ./src/main.py --meta_file_name=${{ inputs.meta_file_name }} --keyword=${{ inputs.keyword }} --comparing_branch=${{ inputs.comparing_branch }}
+    - run: python ${{ github.action_path }}/src/main.py --meta_file_name=${{ inputs.meta_file_name }} --keyword=${{ inputs.keyword }} --comparing_branch=${{ inputs.comparing_branch }}
       id: git-diff
       shell: bash
 
