@@ -47,7 +47,8 @@ args = parser.parse_args()
 # Get Git Diff
 try:
     working_directory = os.getenv('GITHUB_WORKSPACE')
-    git_diff_output = run_git_command(f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff remotes/origin/main --name-only")
+    git_diff_output = run_git_command(f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff remotes/origin/{args.comparing_branch} --name-only")
+    print(f"git diff output: {git_diff_output}")
 except Exception as e:
     logging.error(f"An error occurred while running the git command: {e}")
     git_diff_output = []
