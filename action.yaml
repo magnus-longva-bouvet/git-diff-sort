@@ -1,5 +1,7 @@
 name: 'Git Diff Sort'
 description: 'Provides various Git diff outputs'
+Icon: bar-chart-2
+Color: white
 inputs:
   meta_file_name:
     description: 'Name of the YAML file containing metadata'
@@ -14,8 +16,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: |
-        pip install -r ${{ github.action_path }}/requirements.txt
+    - run: pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
     - run: python ${{ github.action_path }}/src/main.py --meta_file_name=${{ inputs.meta_file_name }} --keyword=${{ inputs.keyword }} --comparing_branch=${{ inputs.comparing_branch }}
       id: git-diff
