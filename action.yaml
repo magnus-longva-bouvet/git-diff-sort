@@ -18,6 +18,8 @@ runs:
   steps:
     - run: pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
+    - run: git --git-dir=$GITHUB_WORKSPACE/.git --work-tree=$GITHUB_WORKSPACE diff --name-only ${{ inputs.comparing_branch }}
+      shell: bash
     - run: python ${{ github.action_path }}/src/main.py --meta_file_name=${{ inputs.meta_file_name }} --keyword=${{ inputs.keyword }} --comparing_branch=${{ inputs.comparing_branch }}
       id: git-diff
       shell: bash
