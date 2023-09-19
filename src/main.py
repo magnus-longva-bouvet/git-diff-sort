@@ -56,6 +56,7 @@ except Exception as e:
 
 # Extract distinct folders
 distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path]))
+print(f"distinct_folders: {distinct_folders}")
 
 # Populate metadata dictionary by reading YAML files in each folder
 folders_with_metadata = []
@@ -72,12 +73,19 @@ for folder in distinct_folders:
     except Exception as e:
         logging.error(f"An error occurred while reading YAML for folder {folder}: {e}")
 
+print(f"folders_with_metadata: {folders_with_metadata}")
+print(f"folders_without_metadata: {folders_without_metadata}")
 
 # Sort folders
 folders_sorted_alpha_inc = sorted(distinct_folders)
 folders_sorted_alpha_dec = sorted(distinct_folders, reverse=True)
 folders_sorted_meta_inc = sorted(folders_with_metadata, key=lambda x: metadata[x])
 folders_sorted_meta_dec = sorted(folders_with_metadata, key=lambda x: metadata[x], reverse=True)
+
+print(f"folders_sorted_alpha_inc: {folders_sorted_alpha_inc}")
+print(f"folders_sorted_alpha_dec: {folders_sorted_alpha_dec}")
+print(f"folders_sorted_meta_inc: {folders_sorted_meta_inc}")
+print(f"folders_sorted_meta_dec: {folders_sorted_meta_dec}")
 
 # Set Outputs
 set_output("distinct_folders", distinct_folders)
