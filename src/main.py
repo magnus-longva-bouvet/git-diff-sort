@@ -97,7 +97,7 @@ set_output("folders_sorted_meta_inc", folders_sorted_meta_inc)
 set_output("folders_sorted_meta_dec", folders_sorted_meta_dec)
 
 # Convert lists to JSON
-json_output = json.dumps({
+json = json.dumps({
     "distinct_folders": distinct_folders,
     "folders_with_metadata": folders_with_metadata,
     "folders_without_metadata": folders_without_metadata,
@@ -108,4 +108,4 @@ json_output = json.dumps({
 })
 
 # Set output as JSON
-set_output("json_output", json_output)
+set_output("json", json)

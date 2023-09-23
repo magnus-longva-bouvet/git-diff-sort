@@ -62,5 +62,5 @@ outputs:
     value: ${{ steps.git-diff.outputs.folders_sorted_meta_dec }}
     description: 'Folders sorted based on metadata (decremental)'
   json:
-    value: ${{ steps.git-diff.outputs.json_output }}
-    description: 'All the different outputs in JSON format, you can access json_output.distinct_folders[]'
+    value: ${{ steps.git-diff.outputs.json }}
+    description: 'All the different outputs in JSON format, you can access json.distinct_folders[]'
