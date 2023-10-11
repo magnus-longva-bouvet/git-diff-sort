@@ -40,7 +40,7 @@ runs:
       shell: bash
     - name: Git diff
       run: |
-        pwd1
+        pwd
         echo $GITHUB_WORKSPACE
         git status
         git diff --name-only "remotes/origin/${{ inputs.comparing_branch }}"
