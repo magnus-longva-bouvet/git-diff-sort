@@ -92,7 +92,7 @@ except Exception as e:
     git_diff_output = []
 
 # Extract distinct folders
-distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path]))
+distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path.strip()]))
 print(f"distinct_folders: {distinct_folders}")
 
 # Populate metadata dictionary by reading YAML files in each folder
