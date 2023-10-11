@@ -119,19 +119,19 @@ folders_sorted_alpha_dec = sorted(distinct_folders, reverse=True)
 folders_sorted_meta_inc = sorted(folders_with_metadata, key=lambda x: metadata[x])
 folders_sorted_meta_dec = sorted(folders_with_metadata, key=lambda x: metadata[x], reverse=True)
 
-print(f"folders_sorted_alpha_inc: {folders_sorted_alpha_inc}")
-print(f"folders_sorted_alpha_dec: {folders_sorted_alpha_dec}")
-print(f"folders_sorted_meta_inc: {folders_sorted_meta_inc}")
-print(f"folders_sorted_meta_dec: {folders_sorted_meta_dec}")
+print(f"folders_sorted_alpha_inc: {json.dumps(folders_sorted_alpha_inc)}")
+print(f"folders_sorted_alpha_dec: {json.dumps(folders_sorted_alpha_dec)}}")
+print(f"folders_sorted_meta_inc: {json.dumps(folders_sorted_meta_inc)}}")
+print(f"folders_sorted_meta_dec: {json.dumps(folders_sorted_meta_dec)}}")
 
 # Set Outputs
-set_output("distinct_folders", distinct_folders)
-set_output("folders_with_metadata", folders_with_metadata)
-set_output("folders_without_metadata", folders_without_metadata)
-set_output("folders_sorted_alpha_inc", folders_sorted_alpha_inc)
-set_output("folders_sorted_alpha_dec", folders_sorted_alpha_dec)
-set_output("folders_sorted_meta_inc", folders_sorted_meta_inc)
-set_output("folders_sorted_meta_dec", folders_sorted_meta_dec)
+set_output("distinct_folders", json.dumps(distinct_folders))
+set_output("folders_with_metadata", json.dumps(folders_with_metadata))
+set_output("folders_without_metadata", json.dumps(folders_without_metadata))
+set_output("folders_sorted_alpha_inc", json.dumps(folders_sorted_alpha_inc))
+set_output("folders_sorted_alpha_dec", json.dumps(folders_sorted_alpha_dec))
+set_output("folders_sorted_meta_inc", json.dumps(folders_sorted_meta_inc))
+set_output("folders_sorted_meta_dec", json.dumps(folders_sorted_meta_dec))
 
 # Convert lists to JSON
 json = json.dumps({
