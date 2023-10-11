@@ -40,8 +40,9 @@ runs:
       shell: bash
     - name: Git diff
       run: |
-        pwd
+        pwd1
         echo $GITHUB_WORKSPACE
+        git status
         git diff --name-only "remotes/origin/${{ inputs.comparing_branch }}"
       shell: bash
     - name: Run Python script
