@@ -43,6 +43,7 @@ runs:
         pwd
         echo $GITHUB_WORKSPACE
         git status
+        git branch -a
         git diff --name-only "remotes/origin/${{ inputs.comparing_branch }}"
       shell: bash
     - name: Run Python script
