@@ -110,8 +110,6 @@ for folder in distinct_folders:
     except Exception as e:
         logging.error(f"An error occurred while reading YAML for folder {folder}: {e}")
 
-print(f"folders_with_metadata: {folders_with_metadata}")
-print(f"folders_without_metadata: {folders_without_metadata}")
 
 # Sort folders
 folders_sorted_alpha_inc = sorted(distinct_folders)
@@ -127,6 +125,9 @@ folders_sorted_alpha_dec_str = json.dumps(folders_sorted_alpha_dec).replace(" ",
 folders_sorted_meta_inc_str = json.dumps(folders_sorted_meta_inc).replace(" ", "")
 folders_sorted_meta_dec_str = json.dumps(folders_sorted_meta_dec).replace(" ", "")
 
+print(f"distinct_folders: {distinct_folders_str}")
+print(f"folders_with_metadata: {folders_with_metadata_str}")
+print(f"folders_without_metadata: {folders_without_metadata_str}")
 print(f"folders_sorted_alpha_inc: {folders_sorted_alpha_inc_str}")
 print(f"folders_sorted_alpha_dec: {folders_sorted_alpha_dec_str}")
 print(f"folders_sorted_meta_inc: {folders_sorted_meta_inc_str}")
