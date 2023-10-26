@@ -5,6 +5,7 @@ import yaml
 import logging
 import uuid
 import os
+from typing import Any, Optional
 
 logging.basicConfig(level=logging.INFO)
 
@@ -12,12 +13,20 @@ def run_git_command(command: str) -> list:
     result = subprocess.run(command, stdout=subprocess.PIPE, text=True, shell=True)
     return result.stdout.strip().split('\n')
 
-def set_output(name: str, value: any) -> None:
+
+
+def set_output(name: str, value: Any) -> None:
+    """Set GitHub Action output variable."""
     logging.info(f"Setting output {name}")
-    github_output = os.environ.get('GITHUB_OUTPUT', None)
+
+    github_output: Optional[str] = os.environ.get('GITHUB_OUTPUT')
+    
     if github_output:
-        with open(github_output, 'a') as fh:
-            print(f'{name}={value}', file=fh)
+        try:
+            with open(github_output, 'a') as fh:
+                fh.write(f"{name}={value}\n")
+        except Exception as e:
+            logging.error(f"Failed to write to GITHUB_OUTPUT: {e}")
     else:
         logging.error("GITHUB_OUTPUT environment variable not found")
 
