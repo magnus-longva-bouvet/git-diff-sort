@@ -49,6 +49,15 @@ def get_default_remote():
     remotes = result.stdout.strip().split('\n')
     return remotes[0] if remotes else 'origin'
 
+def filter_directories(git_diff_output, exclude_patterns):
+    exclude_set = set(exclude_patterns.split(","))
+    return [path for path in git_diff_output if not any(exclude in path for exclude in exclude_set)]
+
+def read_and_filter_yaml(folder, file_name, keyword):
+    yaml_data = read_yaml(folder, file_name)
+    filtered_data = {key: value for key, value in yaml_data.items() if keyword.lower() in key.lower()}
+    return filtered_data
+
 
 # Initialize metadata dictionary
 metadata = {}
@@ -93,9 +102,24 @@ except Exception as e:
     logging.error(f"An error occurred while running the git command: {e}")
     git_diff_output = []
 
+# Inserted: Additional logic for excluding directories in git diff
+if args.exclude_patterns:
+    git_diff_output = filter_directories(git_diff_output, args.exclude_patterns)
+
 # Extract distinct folders
 distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path.strip()]))
 print(f"distinct_folders: {distinct_folders}")
+
+# Inserted: Logic for reading and filtering YAML based on a keyword
+if args.meta_file_name and args.keyword:
+    filtered_yaml_data = {}
+    for folder in distinct_folders:
+        filtered_data = read_and_filter_yaml(folder, args.meta_file_name, args.keyword)
+        if filtered_data:
+            filtered_yaml_data[folder] = filtered_data
+            
+    # Set output for filtered YAML data
+    set_output("filtered_yaml_data", json.dumps(filtered_yaml_data))
 
 # Populate metadata dictionary by reading YAML files in each folder
 folders_with_metadata = []
