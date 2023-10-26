@@ -99,11 +99,12 @@ if args.comparing_branch and args.comparing_tag:
 if args.exclude_patterns and args.include_patterns:
     raise argparse.ArgumentError(None, "You can only use one of exclude_patterns or include_patterns inputs, not both.")
 
+# Get working directory
+working_directory = os.getenv('GITHUB_WORKSPACE')
+print(f"working directory: {working_directory}") 
+
 # Get Git Diff
 try:
-    working_directory = os.getenv('GITHUB_WORKSPACE')
-    print(f"working directory: {working_directory}")    
-
     default_remote = get_default_remote()
     default_branch = get_default_branch()
     if args.comparing_branch:        
