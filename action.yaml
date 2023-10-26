@@ -22,6 +22,9 @@ inputs:
   include_patterns:
     description: 'Comma separated list of directories to include in the git diff'
     required: false
+  strip_folder:
+    description: 'Strip part of the folder name from the output'
+    required: false
 
 runs:
   using: 'composite'
@@ -54,7 +57,8 @@ runs:
           --comparing_branch=${{ inputs.comparing_branch }} \
           --comparing_tag=${{ inputs.comparing_tag }} \
           --exclude_patterns=${{ inputs.excluded_patterns }} \
-          --include_patterns=${{ inputs.included_patterns }}
+          --include_patterns=${{ inputs.included_patterns }} \
+          --strip_folder=${{ inputs.strip_folder }}
       continue-on-error: false
       shell: bash
 
