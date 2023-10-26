@@ -22,9 +22,9 @@ def set_output(name: str, value: Any) -> None:
     if github_output:
         try:
             with open(github_output, 'a') as fh:
-                fh.write(f"{name}={value}\n")
+                fh.write(f"{name}={str(value)}\n")  # Explicitly convert value to string
         except Exception as e:
-            logging.error(f"Failed to write to GITHUB_OUTPUT: {e}")
+            logging.error(f"Failed to write to GITHUB_OUTPUT: {e}, Exception type: {type(e)}")
     else:
         logging.error("GITHUB_OUTPUT environment variable not found")
 
