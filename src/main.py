@@ -24,7 +24,7 @@ def set_output(name: str, value: any) -> None:
 def read_yaml(folder: str, file_name: str) -> dict:
     if folder in yaml_cache:
         return yaml_cache[folder]
-    file_path = os.path.join(github_workspace, folder, file_name)
+    file_path = os.path.join(working_directory, "/", folder, file_name)    
     logging.info(f"Reading YAML file {file_path}")
     try:
         with open(file_path, 'r') as f:
@@ -92,10 +92,6 @@ print(f"Initial value of GITHUB_OUTPUT: {initial_value}")
 
 # Avoid repetitive YAML reads by storing data in a dictionary
 yaml_cache = {}
-
-# Retrieve the GITHUB_WORKSPACE environment variable
-github_workspace = os.environ.get('GITHUB_WORKSPACE', '')
-logging.info(f"GITHUB_WORKSPACE: {github_workspace}")
 
 if args.comparing_branch and args.comparing_tag:
     raise argparse.ArgumentError(None, "You can only use one of comparing_branch or comparing_tag inputs, not both.")
