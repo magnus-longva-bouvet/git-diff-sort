@@ -50,6 +50,7 @@ runs:
         echo "EXCLUDE_PATTERNS=${{ inputs.exclude_patterns }}" >> $GITHUB_ENV
         echo "INCLUDE_PATTERNS=${{ inputs.include_patterns }}" >> $GITHUB_ENV
         echo "STRIP_PATH=${{ inputs.strip_path }}" >> $GITHUB_ENV
+      shell: bash
 
     - name: Run Python script
       id: git-diff
