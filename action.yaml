@@ -29,38 +29,42 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Check if Python 3 is installed
-      id: check_python
-      run: |
-        if python3 --version; then
-          echo "Python3 is installed"
-          echo "python_installed=0" >> $GITHUB_ENV
-        else
-          echo "Python3 is not installed"
-          echo "python_installed=1" >> $GITHUB_ENV
-        fi
-      shell: bash
-    - name: Set up Python
-      if: env.python_installed == 1
+    - name: Set up Python 3.x
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
+
     - name: Install dependencies
-      run: python3 -m pip install -r ${{ github.action_path }}/requirements.txt
+      run: |
+        set -e
+        python3 -m pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
+
+    - name: Set Input Environment Variables
+      id: set-env
+      run: |
+        echo "META_FILE_NAME=${{ inputs.meta_file_name }}" >> $GITHUB_ENV
+        echo "KEYWORD=${{ inputs.keyword }}" >> $GITHUB_ENV
+        echo "COMPARING_BRANCH=${{ inputs.comparing_branch }}" >> $GITHUB_ENV
+        echo "COMPARING_TAG=${{ inputs.comparing_tag }}" >> $GITHUB_ENV
+        echo "EXCLUDE_PATTERNS=${{ inputs.exclude_patterns }}" >> $GITHUB_ENV
+        echo "INCLUDE_PATTERNS=${{ inputs.include_patterns }}" >> $GITHUB_ENV
+        echo "STRIP_PATH=${{ inputs.strip_path }}" >> $GITHUB_ENV
+
     - name: Run Python script
       id: git-diff
       run: |
-        # build env with python command based on input provided
+        set -e
         PARAMS=""
         for INPUT in meta_file_name keyword comparing_branch comparing_tag exclude_patterns include_patterns strip_path; do
-          if [ -n "${{ inputs[$INPUT] }}" ]; then
-            PARAMS="$PARAMS --$INPUT=${{ inputs[$INPUT] }}"
+          INPUT_UPPERCASE=$(echo $INPUT | tr '[:lower:]' '[:upper:]')
+          if [ -n "${!INPUT_UPPERCASE}" ]; then
+            PARAMS="$PARAMS --$INPUT=${!INPUT_UPPERCASE}"
           fi
         done
         python3 ${{ github.action_path }}/src/main.py $PARAMS
-      continue-on-error: false
       shell: bash
+
 
 outputs:
   distinct_folders:
