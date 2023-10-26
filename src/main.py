@@ -21,11 +21,16 @@ def set_output(name: str, value: any) -> None:
         print(value, file=fh)
         print(delimiter, file=fh)
 
+# Avoid repetitive YAML reads by storing data in a dictionary
+yaml_cache = {}
 def read_yaml(folder: str, file_name: str) -> dict:
+    if folder in yaml_cache:
+        return yaml_cache[folder]
     file_path = os.path.join(folder, file_name)
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
+        yaml_cache[folder] = data
         return data
     except FileNotFoundError:
         logging.info(f"File {file_path} not found")
@@ -54,29 +59,32 @@ def include_directories(git_diff_output, include_patterns):
     include_set = set(include_patterns.split(","))
     return [path for path in git_diff_output if any(include in path for include in include_set)]
 
+# Use set operations to efficiently filter directories
 def filter_directories(git_diff_output, exclude_patterns):
-    exclude_set = set(exclude_patterns.split(","))
-    return [path for path in git_diff_output if not any(exclude in path for exclude in exclude_set)]
+    return list(set(git_diff_output) - set(exclude_patterns.split(",")))
 
 def read_and_filter_yaml(folder, file_name, keyword):
     yaml_data = read_yaml(folder, file_name)
     filtered_data = {key: value for key, value in yaml_data.items() if keyword.lower() in key.lower()}
     return filtered_data
 
+def strip_folder_from_lists(folder_list, folder_path_to_strip):
+    return [folder.replace(folder_path_to_strip, '') for folder in folder_list]
 
 # Initialize metadata dictionary
 metadata = {}
 
 # Parse arguments
 parser = argparse.ArgumentParser(description='Process Git diff and sort folders.')
+parser.add_argument('--strip_path', type=str, help='Folder path to strip', required=False)
 parser.add_argument('--meta_file_name', type=str, help='Name of the YAML metadata file', default=None)
 parser.add_argument('--keyword', type=str, help='Keyword to look for in the YAML file', default=None)
-parser.add_argument('--comparing_branch', type=str, help='Branch to compare with', default=None)
-parser.add_argument('--comparing_tag', type=str, help='Tag to compare with', default=None)
-parser.add_argument('--exclude_patterns', type=str, help='Patterns for paths to exclude from git dir', default=None)
-parser.add_argument('--include_patterns', type=str, help='Patterns for paths to include in git dir', default=None)
-
-
+group = parser.add_mutually_exclusive_group(required=False) # Use mutually exclusive group to ensure only one of the two arguments is used
+group.add_argument('--comparing_branch', type=str, help='Branch to compare with', default="main")
+group.add_argument('--comparing_tag', type=str, help='Tag to compare with', default=None)
+group2 = parser.add_mutually_exclusive_group(required=False) # Use mutually exclusive group to ensure only one of the two arguments is used
+group2.add_argument('--exclude_patterns', type=str, help='Patterns for paths to exclude from git dir', default=None)
+group2.add_argument('--include_patterns', type=str, help='Patterns for paths to include in git dir', default=None)
 args = parser.parse_args()
 
 # Print the value of GITHUB_OUTPUT before any updates
@@ -157,6 +165,18 @@ folders_sorted_alpha_dec = sorted(distinct_folders, reverse=True)
 folders_sorted_meta_inc = sorted(folders_with_metadata, key=lambda x: metadata[x])
 folders_sorted_meta_dec = sorted(folders_with_metadata, key=lambda x: metadata[x], reverse=True)
 
+# Conditionally strip folder paths
+strip_path = args.strip_path
+if strip_path:
+    distinct_folders = strip_folder_from_lists(distinct_folders, strip_path)
+    folders_with_metadata = strip_folder_from_lists(folders_with_metadata, strip_path)
+    folders_without_metadata = strip_folder_from_lists(folders_without_metadata, strip_path)
+    folders_sorted_alpha_inc = strip_folder_from_lists(folders_sorted_alpha_inc, strip_path)
+    folders_sorted_alpha_dec = strip_folder_from_lists(folders_sorted_alpha_dec, strip_path)
+    folders_sorted_meta_inc = strip_folder_from_lists(folders_sorted_meta_inc, strip_path)
+    folders_sorted_meta_dec = strip_folder_from_lists(folders_sorted_meta_dec, strip_path)
+
+# Convert lists to strings
 distinct_folders_str = json.dumps(distinct_folders).replace(" ", "")
 folders_with_metadata_str = json.dumps(folders_with_metadata).replace(" ", "")
 folders_without_metadata_str = json.dumps(folders_without_metadata).replace(" ", "")
@@ -165,6 +185,7 @@ folders_sorted_alpha_dec_str = json.dumps(folders_sorted_alpha_dec).replace(" ",
 folders_sorted_meta_inc_str = json.dumps(folders_sorted_meta_inc).replace(" ", "")
 folders_sorted_meta_dec_str = json.dumps(folders_sorted_meta_dec).replace(" ", "")
 
+# Print outputs
 print(f"distinct_folders: {distinct_folders_str}")
 print(f"folders_with_metadata: {folders_with_metadata_str}")
 print(f"folders_without_metadata: {folders_without_metadata_str}")

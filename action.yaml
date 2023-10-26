@@ -55,6 +55,7 @@ runs:
           --comparing_tag=${{ inputs.comparing_tag }} \
           --exclude_patterns=${{ inputs.excluded_patterns }} \
           --include_patterns=${{ inputs.included_patterns }}
+      continue-on-error: false
       shell: bash
 
 outputs:
