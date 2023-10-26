@@ -57,22 +57,13 @@ runs:
       run: |
         set -e
         PARAMS=""
-        for INPUT in meta_file_name keyword exclude_patterns include_patterns strip_path; do
-          INPUT_UPPERCASE=$(echo $INPUT | tr '[:lower:]' '[:upper:]')
-          if [ -n "${!INPUT_UPPERCASE}" ]; then
-            PARAMS="$PARAMS --$INPUT=${!INPUT_UPPERCASE}"
-          fi
-        done
-
-        # Add either comparing_branch or comparing_tag, but not both
-        if [ -n "$COMPARING_BRANCH" ] && [ -z "$COMPARING_TAG" ]; then
-          PARAMS="$PARAMS --comparing_branch=$COMPARING_BRANCH"
-        elif [ -z "$COMPARING_BRANCH" ] && [ -n "$COMPARING_TAG" ]; then
-          PARAMS="$PARAMS --comparing_tag=$COMPARING_TAG"
-        elif [ -n "$COMPARING_BRANCH" ] && [ -n "$COMPARING_TAG" ]; then
-          echo "Error: You can only use one of comparing_branch or comparing_tag inputs, not both."
-          exit 1
-        fi
+        if [ -n "$META_FILE_NAME" ]; then PARAMS="$PARAMS --meta_file_name=$META_FILE_NAME" fi
+        if [ -n "$KEYWORD" ]; then PARAMS="$PARAMS --keyword=$KEYWORD" fi
+        if [ -n "$COMPARING_BRANCH" ]; then PARAMS="$PARAMS --comparing_branch=$COMPARING_BRANCH" fi
+        if [ -n "$COMPARING_TAG" ]; then PARAMS="$PARAMS --comparing_tag=$COMPARING_TAG" fi
+        if [ -n "$EXCLUDE_PATTERNS" ]; then PARAMS="$PARAMS --exclude_patterns=$EXCLUDE_PATTERNS" fi
+        if [ -n "$INCLUDE_PATTERNS" ]; then PARAMS="$PARAMS --include_patterns=$INCLUDE_PATTERNS" fi
+        if [ -n "$STRIP_PATH" ]; then PARAMS="$PARAMS --strip_path=$STRIP_PATH" fi        
         python3 ${{ github.action_path }}/src/main.py $PARAMS
       shell: bash
 
