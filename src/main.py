@@ -21,10 +21,6 @@ def set_output(name: str, value: any) -> None:
         print(value, file=fh)
         print(delimiter, file=fh)
 
-# Avoid repetitive YAML reads by storing data in a dictionary
-yaml_cache = {}
-# Retrieve the GITHUB_WORKSPACE environment variable
-github_workspace = os.environ.get('GITHUB_WORKSPACE', '')
 def read_yaml(folder: str, file_name: str) -> dict:
     if folder in yaml_cache:
         return yaml_cache[folder]
@@ -94,8 +90,18 @@ args = parser.parse_args()
 initial_value = os.environ.get('GITHUB_OUTPUT', 'Not Set')
 print(f"Initial value of GITHUB_OUTPUT: {initial_value}")
 
+# Avoid repetitive YAML reads by storing data in a dictionary
+yaml_cache = {}
+
+# Retrieve the GITHUB_WORKSPACE environment variable
+github_workspace = os.environ.get('GITHUB_WORKSPACE', '')
+logging.info(f"GITHUB_WORKSPACE: {github_workspace}")
+
 if args.comparing_branch and args.comparing_tag:
     raise argparse.ArgumentError(None, "You can only use one of comparing_branch or comparing_tag inputs, not both.")
+
+if args.exclude_patterns and args.include_patterns:
+    raise argparse.ArgumentError(None, "You can only use one of exclude_patterns or include_patterns inputs, not both.")
 
 # Get Git Diff
 try:
