@@ -80,7 +80,7 @@ parser.add_argument('--strip_path', type=str, help='Folder path to strip', requi
 parser.add_argument('--meta_file_name', type=str, help='Name of the YAML metadata file', default=None)
 parser.add_argument('--keyword', type=str, help='Keyword to look for in the YAML file', default=None)
 group = parser.add_mutually_exclusive_group(required=False) # Use mutually exclusive group to ensure only one of the two arguments is used
-group.add_argument('--comparing_branch', type=str, help='Branch to compare with', default="main")
+group.add_argument('--comparing_branch', type=str, help='Branch to compare with', default=None)
 group.add_argument('--comparing_tag', type=str, help='Tag to compare with', default=None)
 group2 = parser.add_mutually_exclusive_group(required=False) # Use mutually exclusive group to ensure only one of the two arguments is used
 group2.add_argument('--exclude_patterns', type=str, help='Patterns for paths to exclude from git dir', default=None)
