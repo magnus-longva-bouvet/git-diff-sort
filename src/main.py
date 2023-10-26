@@ -17,7 +17,7 @@ def run_git_command(command: str) -> list:
 
 def set_output(name: str, value: Any) -> None:
     """Set GitHub Action output variable."""
-    logging.info(f"Setting output {name}")
+    logging.info(f"Setting output {name} : {value}")
 
     github_output: Optional[str] = os.environ.get('GITHUB_OUTPUT')
     
@@ -37,10 +37,10 @@ def read_yaml(folder: str, file_name: str) -> dict:
             data = yaml.safe_load(f)
         return data
     except FileNotFoundError:
-        logging.error(f"File {file_path} not found")
+        logging.info(f"File {file_path} not found")
         return {}
     except yaml.YAMLError as exc:
-        logging.error(f"Error in configuration file: {exc}")
+        logging.info(f"Error in configuration file: {exc}")
         return {}
     
 def get_default_branch():
