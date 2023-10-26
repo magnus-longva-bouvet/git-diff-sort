@@ -20,13 +20,21 @@ def set_output(name: str, value: Any) -> None:
     github_output: Optional[str] = os.environ.get('GITHUB_OUTPUT')
     
     if github_output:
-        try:
-            with open(github_output, 'a') as fh:
-                fh.write(f"{name}={str(value)}\n")  # Explicitly convert value to string
-        except Exception as e:
-            logging.error(f"Failed to write to GITHUB_OUTPUT: {e}, Exception type: {type(e)}")
+        # Perform some basic validation on the file path, if necessary
+        if os.path.exists(github_output) and os.access(github_output, os.W_OK):
+            try:
+                with open(github_output, 'a') as fh:
+                    fh.write(f"{name}={str(value)}\n")  # Explicitly convert value to string
+            except Exception as e:
+                logging.error(f"Failed to write to GITHUB_OUTPUT: {e}, Exception type: {type(e)}")
+        else:
+            logging.error(f"File path in GITHUB_OUTPUT either does not exist or is not writable: {github_output}")
     else:
         logging.error("GITHUB_OUTPUT environment variable not found")
+
+# This will help in debugging by displaying more about the environment variables.
+logging.info(f"Environment variables: {os.environ}")
+
 
 def read_yaml(folder: str, file_name: str) -> dict:
     file_path = os.path.join(folder, file_name)
