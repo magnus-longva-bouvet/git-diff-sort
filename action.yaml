@@ -16,9 +16,13 @@ inputs:
   comparing_tag:
     description: 'Tag to compare with'
     required: false
-  excluded_directories:
+  exclude_patterns:
     description: 'Comma separated list of directories to exclude from the git diff'
     required: false
+  include_patterns:
+    description: 'Comma separated list of directories to include in the git diff'
+    required: false
+
 runs:
   using: 'composite'
   steps:
@@ -48,7 +52,8 @@ runs:
           --keyword=${{ inputs.keyword }} \
           --comparing_branch=${{ inputs.comparing_branch }} \
           --comparing_tag=${{ inputs.comparing_tag }} \
-          --exclude_directories=${{ inputs.excluded_directories }}
+          --exclude_patterns=${{ inputs.excluded_patterns }} \
+          --include_patterns=${{ inputs.included_patterns }}
       shell: bash
 
 outputs:

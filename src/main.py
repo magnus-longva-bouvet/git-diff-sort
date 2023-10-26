@@ -49,6 +49,10 @@ def get_default_remote():
     remotes = result.stdout.strip().split('\n')
     return remotes[0] if remotes else 'origin'
 
+def include_directories(git_diff_output, include_patterns):
+    include_set = set(include_patterns.split(","))
+    return [path for path in git_diff_output if any(include in path for include in include_set)]
+
 def filter_directories(git_diff_output, exclude_patterns):
     exclude_set = set(exclude_patterns.split(","))
     return [path for path in git_diff_output if not any(exclude in path for exclude in exclude_set)]
@@ -69,12 +73,13 @@ parser.add_argument('--keyword', type=str, help='Keyword to look for in the YAML
 parser.add_argument('--comparing_branch', type=str, help='Branch to compare with', default=None)
 parser.add_argument('--comparing_tag', type=str, help='Tag to compare with', default=None)
 parser.add_argument('--exclude_patterns', type=str, help='Patterns for paths to exclude from git dir', default=None)
+parser.add_argument('--include_patterns', type=str, help='Patterns for paths to include in git dir', default=None)
+
 
 args = parser.parse_args()
 
 if args.comparing_branch and args.comparing_tag:
     raise argparse.ArgumentError(None, "You can only use one of comparing_branch or comparing_tag inputs, not both.")
-
 
 # Get Git Diff
 try:
@@ -95,9 +100,13 @@ try:
         else:
             git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff {args.comparing_tag}..HEAD"
 
+    git_diff_output = run_git_command(f"{git_diff_command} --name-only")
 
-    git_diff_output = run_git_command(f"{git_diff_command} --name-only {args.exclude_patterns}")
-    print(f"git diff output: {git_diff_output}")
+    if args.include_patterns:
+        git_diff_output = include_directories(git_diff_output, args.include_patterns)
+    elif args.exclude_patterns:  # Only run exclude if include is not specified
+        git_diff_output = filter_directories(git_diff_output, args.exclude_patterns)
+
 except Exception as e:
     logging.error(f"An error occurred while running the git command: {e}")
     git_diff_output = []
