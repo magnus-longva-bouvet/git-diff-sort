@@ -13,8 +13,6 @@ def run_git_command(command: str) -> list:
     result = subprocess.run(command, stdout=subprocess.PIPE, text=True, shell=True)
     return result.stdout.strip().split('\n')
 
-
-
 def set_output(name: str, value: Any) -> None:
     """Set GitHub Action output variable."""
     logging.info(f"Setting output {name} : {value}")
@@ -87,6 +85,10 @@ parser.add_argument('--include_patterns', type=str, help='Patterns for paths to 
 
 
 args = parser.parse_args()
+
+# Print the value of GITHUB_OUTPUT before any updates
+initial_value = os.environ.get('GITHUB_OUTPUT', 'Not Set')
+print(f"Initial value of GITHUB_OUTPUT: {initial_value}")
 
 if args.comparing_branch and args.comparing_tag:
     raise argparse.ArgumentError(None, "You can only use one of comparing_branch or comparing_tag inputs, not both.")
@@ -200,3 +202,7 @@ json = json.dumps({
 
 # Set output as JSON
 set_output("json", json)
+
+# Print the value of GITHUB_OUTPUT after all updates
+final_value = os.environ.get('GITHUB_OUTPUT', 'Not Set')
+print(f"Final value of GITHUB_OUTPUT: {final_value}")
