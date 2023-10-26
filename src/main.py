@@ -102,7 +102,7 @@ try:
     default_remote = get_default_remote()
     default_branch = get_default_branch()
     if args.comparing_branch:        
-        if args.comparing_branch.lower() == 'default':            
+        if args.comparing_branch.lower() == 'main':            
             git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff {default_branch}"
         else:
             git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff remotes/{default_remote}/{args.comparing_branch}"
