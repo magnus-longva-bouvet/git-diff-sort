@@ -24,7 +24,7 @@ def set_output(name: str, value: any) -> None:
 def read_yaml(folder: str, file_name: str) -> dict:
     if folder in yaml_cache:
         return yaml_cache[folder]
-    file_path = os.path.join(working_directory, "/", folder, file_name)    
+    file_path = os.path.join(working_directory, folder, file_name)
     logging.info(f"Reading YAML file {file_path}")
     try:
         with open(file_path, 'r') as f:
@@ -155,14 +155,15 @@ folders_without_metadata = []
 
 for folder in distinct_folders:
     try:
-        sorting_key = read_yaml(working_directory, "/", folder, args.meta_file_name).get(args.keyword)
+        full_path_folder = os.path.join(working_directory, folder)
+        sorting_key = read_yaml(full_path_folder, args.meta_file_name).get(args.keyword)
         if sorting_key:
             metadata[folder] = sorting_key
             folders_with_metadata.append(folder)
         else:
             folders_without_metadata.append(folder)
     except Exception as e:
-        logging.error(f"An error occurred while reading YAML for folder {folder}: {e}")
+        logging.error(f"An error occurred while reading YAML for folder {full_path_folder}: {e}")
 
 
 # Sort folders
