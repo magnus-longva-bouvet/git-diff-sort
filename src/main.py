@@ -23,10 +23,13 @@ def set_output(name: str, value: any) -> None:
 
 # Avoid repetitive YAML reads by storing data in a dictionary
 yaml_cache = {}
+# Retrieve the GITHUB_WORKSPACE environment variable
+github_workspace = os.environ.get('GITHUB_WORKSPACE', '')
 def read_yaml(folder: str, file_name: str) -> dict:
     if folder in yaml_cache:
         return yaml_cache[folder]
-    file_path = os.path.join(folder, file_name)
+    file_path = os.path.join(github_workspace, folder, file_name)
+    logging.info(f"Reading YAML file {file_path}")
     try:
         with open(file_path, 'r') as f:
             data = yaml.safe_load(f)
@@ -186,13 +189,13 @@ folders_sorted_meta_inc_str = json.dumps(folders_sorted_meta_inc).replace(" ", "
 folders_sorted_meta_dec_str = json.dumps(folders_sorted_meta_dec).replace(" ", "")
 
 # Print outputs
-print(f"distinct_folders: {distinct_folders_str}")
-print(f"folders_with_metadata: {folders_with_metadata_str}")
-print(f"folders_without_metadata: {folders_without_metadata_str}")
-print(f"folders_sorted_alpha_inc: {folders_sorted_alpha_inc_str}")
-print(f"folders_sorted_alpha_dec: {folders_sorted_alpha_dec_str}")
-print(f"folders_sorted_meta_inc: {folders_sorted_meta_inc_str}")
-print(f"folders_sorted_meta_dec: {folders_sorted_meta_dec_str}")
+logging.info(f"distinct_folders: {distinct_folders_str}")
+logging.info(f"folders_with_metadata: {folders_with_metadata_str}")
+logging.info(f"folders_without_metadata: {folders_without_metadata_str}")
+logging.info(f"folders_sorted_alpha_inc: {folders_sorted_alpha_inc_str}")   
+logging.info(f"folders_sorted_alpha_dec: {folders_sorted_alpha_dec_str}")   
+logging.info(f"folders_sorted_meta_inc: {folders_sorted_meta_inc_str}") 
+logging.info(f"folders_sorted_meta_dec: {folders_sorted_meta_dec_str}") 
 
 # Set Outputs
 set_output("distinct_folders", distinct_folders_str)
