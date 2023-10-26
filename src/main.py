@@ -82,9 +82,10 @@ try:
     elif args.comparing_tag:
         if args.comparing_tag.lower() == 'latest':
             latest_tag = get_latest_tag()
-            git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff {latest_tag}"
+            git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff {latest_tag}..HEAD"
         else:
-            git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff {args.comparing_tag}"
+            git_diff_command = f"git --git-dir={working_directory}/.git --work-tree={working_directory} diff {args.comparing_tag}..HEAD"
+
 
     git_diff_output = run_git_command(f"{git_diff_command} --name-only {args.exclude_patterns}")
     print(f"git diff output: {git_diff_output}")
