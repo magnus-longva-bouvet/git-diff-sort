@@ -64,7 +64,9 @@ runs:
         if [ -n "$EXCLUDE_PATTERNS" ]; then PARAMS="$PARAMS --exclude_patterns=$EXCLUDE_PATTERNS" fi
         if [ -n "$INCLUDE_PATTERNS" ]; then PARAMS="$PARAMS --include_patterns=$INCLUDE_PATTERNS" fi
         if [ -n "$STRIP_PATH" ]; then PARAMS="$PARAMS --strip_path=$STRIP_PATH" fi        
-        python3 ${{ github.action_path }}/src/main.py "$PARAMS"
+        python_cmd="python3 ${{ github.action_path }}/src/main.py $PARAMS"
+        echo python_cmd=$python_cmd
+        eval $python_cmd
       shell: bash
 
 
