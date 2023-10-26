@@ -51,14 +51,14 @@ runs:
     - name: Run Python script
       id: git-diff
       run: |
-        python3 ${{ github.action_path }}/src/main.py \
-          --meta_file_name=${{ inputs.meta_file_name }} \
-          --keyword=${{ inputs.keyword }} \
-          --comparing_branch=${{ inputs.comparing_branch }} \
-          --comparing_tag=${{ inputs.comparing_tag }} \
-          --exclude_patterns=${{ inputs.excluded_patterns }} \
-          --include_patterns=${{ inputs.included_patterns }} \
-          --strip_path=${{ inputs.strip_path }}
+        # build env with python command based on input provided
+        PARAMS=""
+        for INPUT in meta_file_name keyword comparing_branch comparing_tag exclude_patterns include_patterns strip_path; do
+          if [ -n "${{ inputs[$INPUT] }}" ]; then
+            PARAMS="$PARAMS --$INPUT=${{ inputs[$INPUT] }}"
+          fi
+        done
+        python3 ${{ github.action_path }}/src/main.py $PARAMS
       continue-on-error: false
       shell: bash
 
