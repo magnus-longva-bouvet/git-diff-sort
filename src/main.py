@@ -14,11 +14,12 @@ def run_git_command(command: str) -> list:
 
 def set_output(name: str, value: any) -> None:
     logging.info(f"Setting output {name}")
-    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-        delimiter = uuid.uuid1()
-        print(f'{name}<<{delimiter}', file=fh)
-        print(value, file=fh)
-        print(delimiter, file=fh)
+    github_output = os.environ.get('GITHUB_OUTPUT', None)
+    if github_output:
+        with open(github_output, 'a') as fh:
+            print(f'{name}={value}', file=fh)
+    else:
+        logging.error("GITHUB_OUTPUT environment variable not found")
 
 def read_yaml(folder: str, file_name: str) -> dict:
     file_path = os.path.join(folder, file_name)
