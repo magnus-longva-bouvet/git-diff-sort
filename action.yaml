@@ -57,12 +57,22 @@ runs:
       run: |
         set -e
         PARAMS=""
-        for INPUT in meta_file_name keyword comparing_branch comparing_tag exclude_patterns include_patterns strip_path; do
+        for INPUT in meta_file_name keyword exclude_patterns include_patterns strip_path; do
           INPUT_UPPERCASE=$(echo $INPUT | tr '[:lower:]' '[:upper:]')
           if [ -n "${!INPUT_UPPERCASE}" ]; then
             PARAMS="$PARAMS --$INPUT=${!INPUT_UPPERCASE}"
           fi
         done
+
+        # Add either comparing_branch or comparing_tag, but not both
+        if [ -n "$COMPARING_BRANCH" ] && [ -z "$COMPARING_TAG" ]; then
+          PARAMS="$PARAMS --comparing_branch=$COMPARING_BRANCH"
+        elif [ -z "$COMPARING_BRANCH" ] && [ -n "$COMPARING_TAG" ]; then
+          PARAMS="$PARAMS --comparing_tag=$COMPARING_TAG"
+        elif [ -n "$COMPARING_BRANCH" ] && [ -n "$COMPARING_TAG" ]; then
+          echo "Error: You can only use one of comparing_branch or comparing_tag inputs, not both."
+          exit 1
+        fi
         python3 ${{ github.action_path }}/src/main.py $PARAMS
       shell: bash
 
