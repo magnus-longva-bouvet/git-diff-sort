@@ -57,13 +57,19 @@ runs:
       run: |
         set -e
         PARAMS=""
-        [ -n "$META_FILE_NAME" ] && PARAMS="$PARAMS --meta_file_name=$META_FILE_NAME"
-        [ -n "$KEYWORD" ] && PARAMS="$PARAMS --keyword=$KEYWORD"
-        [ -n "$COMPARING_BRANCH" ] && PARAMS="$PARAMS --comparing_branch=$COMPARING_BRANCH"
-        [ -n "$COMPARING_TAG" ] && PARAMS="$PARAMS --comparing_tag=$COMPARING_TAG"
-        [ -n "$EXCLUDE_PATTERNS" ] && PARAMS="$PARAMS --exclude_patterns=$EXCLUDE_PATTERNS"
-        [ -n "$INCLUDE_PATTERNS" ] && PARAMS="$PARAMS --include_patterns=$INCLUDE_PATTERNS"
-        [ -n "$STRIP_PATH" ] && PARAMS="$PARAMS --strip_path=$STRIP_PATH"
+        if [[ -z "$COMPARING_BRANCH" ]]; then
+          PARAMS="$PARAMS --comparing_branch=$COMPARING_BRANCH"
+        elif [[ -z "$COMPARING_TAG" ]]; then
+          PARAMS="$PARAMS --comparing_tag=$COMPARING_TAG"
+        fi
+        if [[ -z "$EXCLUDE_PATTERNS" ]]; then
+          PARAMS="$PARAMS --exclude_patterns=$EXCLUDE_PATTERNS"        
+        elif [[ -z "$INCLUDE_PATTERNS" ]]; then
+          PARAMS="$PARAMS --include_patterns=$INCLUDE_PATTERNS"
+        fi
+        if [[ -z "$STRIP_PATH" ]]; then
+          PARAMS="$PARAMS --strip_path=$STRIP_PATH"
+        fi
         python_cmd="python3 ${{ github.action_path }}/src/main.py $PARAMS"
         echo python_cmd=$python_cmd
         eval $python_cmd
