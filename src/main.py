@@ -155,7 +155,7 @@ folders_without_metadata = []
 
 for folder in distinct_folders:
     try:
-        sorting_key = read_yaml(folder, args.meta_file_name).get(args.keyword)
+        sorting_key = read_yaml(working_directory, "/", folder, args.meta_file_name).get(args.keyword)
         if sorting_key:
             metadata[folder] = sorting_key
             folders_with_metadata.append(folder)
