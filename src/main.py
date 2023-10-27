@@ -131,8 +131,12 @@ except Exception as e:
 if args.exclude_patterns:
     git_diff_output = filter_directories(git_diff_output, args.exclude_patterns)
 
+## Extract distinct folders
+#distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path.strip()]))
+#print(f"distinct_folders: {distinct_folders}")
+
 # Extract distinct folders
-distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path.strip()]))
+distinct_folders = list(set([os.path.dirname(path) for path in git_diff_output if path]))
 print(f"distinct_folders: {distinct_folders}")
 
 # Inserted: Logic for reading and filtering YAML based on a keyword
