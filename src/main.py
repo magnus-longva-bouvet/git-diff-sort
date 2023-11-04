@@ -171,8 +171,8 @@ for folder in distinct_folders:
 # Sort folders
 folders_sorted_alpha_inc = sorted(distinct_folders)
 folders_sorted_alpha_dec = sorted(distinct_folders, reverse=True)
-folders_sorted_meta_inc = sorted(folders_with_metadata, key=lambda x: metadata[x])
-folders_sorted_meta_dec = sorted(folders_with_metadata, key=lambda x: metadata[x], reverse=True)
+folders_sorted_meta_inc = sorted(folders_with_metadata, key=lambda x: str(metadata[x]))
+folders_sorted_meta_dec = sorted(folders_with_metadata, key=lambda x: str(metadata[x]), reverse=True)
 
 # Conditionally strip folder paths
 strip_path = args.strip_path
