@@ -166,7 +166,9 @@ for folder in distinct_folders:
         full_path_folder = os.path.join(working_directory, folder)
         logging.error(f"An error occurred while reading YAML for folder {full_path_folder}: {e}")
         raise e
-
+    
+for folder in folders_with_metadata:
+    logging.info(f"Folder: {folder}, Metadata: {metadata[folder]}")
 
 # Sort folders
 folders_sorted_alpha_inc = sorted(distinct_folders)
