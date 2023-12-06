@@ -61,7 +61,7 @@ def filter_directories(git_diff_output, exclude_patterns):
 
 def read_and_filter_yaml(folder, file_name, keyword):
     yaml_data = read_yaml(folder, file_name)
-    filtered_data = {key: value for key, value in yaml_data.items() if keyword.lower() in key.lower()}
+    filtered_data = {key: value for key, value in yaml_data.items() if keyword.lower() in str(key).lower()}
     return filtered_data
 
 def strip_folder_from_lists(folder_list, folder_path_to_strip):
